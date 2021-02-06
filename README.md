@@ -18,7 +18,7 @@ Api RESTful para captura de ganhos na plataforma CRM Pipedrive e inserção de p
 
 1 - Iniciar Projeto ![OK](/_docs/icon-success.png) <br />
 2 - Configurar projeto<br />
-2.1 - Instalação de Dependencias<br />
+2.1 - Instalação de Dependencias ![OK](/_docs/icon-success.png)<br />
 2.1.1 - Dependencias iniciais (express, cors, axios, nocache)<br />
 2.2 - Instalação de Dependencias de Desenvolvimento<br />
 2.2.1 - Dependencias iniciais (
