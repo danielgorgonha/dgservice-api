@@ -1,0 +1,9 @@
+{
+  "name": "dgservice-api",
+  "version": "1.0.0",
+  "description": "Api RESTful para captura de ganhos na plataforma CRM Pipedrive e inserção de pedidos na plataforma Bling, armazenando estes ganhos em MongoDB para cosolidar através de um endpoint.",
+  "main": "server.ts",
+  "repository": "https://github.com/danielgorgonha/dgservice-api.git",
+  "author": "Daniel R Gorgonha <daniel.gorgonha@jdrel.com.br>",
+  "license": "MIT"
+}

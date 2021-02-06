@@ -16,7 +16,7 @@ Api RESTful para captura de ganhos na plataforma CRM Pipedrive e inserção de p
 
 ## Checklist do Projeto
 
-1 - Iniciar Projeto<br />
+1 - Iniciar Projeto ![OK](/_docs/icon-success.png) <br />
 2 - Configurar projeto<br />
 2.1 - Instalação de Dependencias<br />
 2.1.1 - Dependencias iniciais (express, cors, axios, nocache)<br />
