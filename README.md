@@ -41,8 +41,10 @@ ts-jest, ts-node-dev, tsconfig-paths, typescript )
 (editorconfig, env, eslintignore, eslintrc, babelconfig, jestconfig,
 prettierconfig e tsconfig) ![OK](/_docs/icon-success.png)<br /> 5.2 - pasta raiz
 SRC (App, Routes, Server) ![OK](/_docs/icon-success.png)<br /> 6 - Criar
-Controllers<br /> 7 - Criar Middlewares<br /> 8 - Criar Models<br /> 9 - Criar
-Services<br /> 10 - Testes<br /> 11 - Deploy<br />
+Controllers ![OK](/_docs/icon-success.png)<br /> 7 - Criar Middlewares
+![OK](/_docs/icon-success.png)<br /> 8 - Criar Models
+![OK](/_docs/icon-success.png)<br /> 9 - Criar Services
+![OK](/_docs/icon-success.png)<br /> 10 - Testes<br /> 11 - Deploy<br />
 
 ## Documentação
 

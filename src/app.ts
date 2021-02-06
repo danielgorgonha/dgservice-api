@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 
 import routes from './routes'
 
-process.env.TZ = 'America/Sao_Paulo';
 require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 
 class App {
@@ -26,7 +25,7 @@ class App {
     this.express.use(morgan('dev'))
     this.express.use(nocache())
     this.express.use((req, res, next) => {
-      if (req.query.apikey === process.env.token) {
+      if (req.query.apikey === process.env.apikey) {
         return next()
       } else {
         return res.status(401).json({ status: 401, message: 'Invalid Access!' })

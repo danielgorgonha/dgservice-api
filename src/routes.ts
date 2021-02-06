@@ -1,9 +1,13 @@
 import { Router } from 'express'
 
+//Controllers
+import PipedriveController from '@controllers/PipedriveController'
+
+//Middlewares
+import WonMiddlewares from '@middlewares/WonMiddleware'
+
 const routes = Router()
 
-routes.get('/', (req, res) => {
-  return res.status(200).json({ message: 'ok' })
-})
+routes.post('/pipedrive/won', WonMiddlewares, PipedriveController.create)
 
 export default routes
