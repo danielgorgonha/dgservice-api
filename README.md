@@ -51,8 +51,8 @@ tsconfig-paths,
 typescript
 ) ![OK](/_docs/icon-success.png)<br />
 3 - Configurar Package<br />
-3.1 - Engines<br />
-3.2 - Scripts<br />
+3.1 - Engines ![OK](/_docs/icon-success.png)<br />
+3.2 - Scripts ![OK](/_docs/icon-success.png)<br />
 4 - Esturura pastas<br />
 5 - Criar arquivos Raiz<br />
 5.1 - (App, Routes, Server, editorconfig, env, eslintignore, eslintrc, babelconfig, jestconfig, prettierconfig e tsconfig)<br />
