@@ -8,6 +8,43 @@ import Opportunities from '@models/Opportunities'
 
 class PipedriveController {
 
+  public async index(req: Request, res: Response): Promise<Response> {
+    const { dateStart, dateEnd } = req.query
+    const getData = await Opportunities.find({
+      date: {
+        $gte: dateStart,
+        $lte: dateEnd
+      }
+    })
+    let synthetic = {
+      total_dealvalue: 0
+    }
+    let analytic = []
+    let dtArray = []
+    for (const key of getData) {
+      dtArray.push(key.date)
+      synthetic.total_dealvalue += key.dealValue
+    }
+
+    dtArray.filter((thisOne, i) => {
+      if (dtArray.indexOf(thisOne) === i) {
+        let sumValue = 0
+        getData.filter((data, index, array) => {
+          if (data.date === thisOne) {
+            sumValue += data.dealValue
+          }
+        })
+
+        analytic.push({
+          date: thisOne,
+          dealValue: Number(sumValue.toFixed(2))
+        })
+      }
+    })
+
+    return res.status(200).json({synthetic, analytic})
+  }
+
   public async create(req: Request, res: Response): Promise<Response> {
     const { current: { org_id, value } }: IData = req.body
 
@@ -114,7 +151,7 @@ interface IProductArray {
 const insertDB = async (value: number) => {
   try {
     await Opportunities.create({
-      valor_total: value
+      dealValue: value
     })
   } catch (err) {
     throw err
