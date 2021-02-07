@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 
 import routes from './routes'
 
-require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
+//require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 
 class App {
   public express: express.Application
