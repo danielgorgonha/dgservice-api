@@ -24,7 +24,7 @@ class PipedriveController {
     try {
 
     } catch (err) {
-      throw JSON.parse(err.response)
+      throw JSON.stringify(err.response)
     }
 
 
@@ -41,8 +41,6 @@ interface IData {
     value: number
   }
 }
-
-
 const insertDB = async (value: number) => {
   try {
     await Opportunities.create({
@@ -92,7 +90,6 @@ const getDeals = async (id: number) => {
         api_token: process.env.pipedrive_token
       }
     })
-
     return {
       company,
       address,
@@ -100,19 +97,65 @@ const getDeals = async (id: number) => {
       phone: phone.map((phone) => phone.primary ? phone.value : '').toString(),
       email: email.map((email) => email.primary ? email.value : '').toString()
     }
-
   } catch (err) {
     throw err
   }
 }
 
+interface IDealProduct {
+  data: {
+    data: {
+      product_id: number
+    }
+  }
+}
+
+interface IProduct {
+  data: {
+    data: {
+      name: string
+      code: string
+      unit: string
+      tax: number
+      prices: [
+        {
+          price: number
+          cost: number
+          overhead_cost: number
+        }
+      ]
+    }
+  }
+}
+
 const getProducts = async (id: number) => {
   try {
-    return await ApiPipeDrive.get(`/deals/${id}/products`, {
+    const { data: { data } }: IDealProduct = await ApiPipeDrive.get(`/deals/${id}/products`, {
       params: {
         api_token: process.env.pipedrive_token
       }
     })
+
+    const productArray: Array<any> = []
+
+    for (const key in data) {
+      const { data: { data: { name: productName, code, unit, tax, prices } } }: IProduct = await ApiPipeDrive.get(`/products/${data[key].product_id}`, {
+        params: {
+          api_token: process.env.pipedrive_token
+        }
+      })
+
+      productArray.push({
+        productName,
+        code,
+        unit,
+        tax,
+        price: prices[0].price,
+        cost: prices[0].cost,
+        overhead_cost: prices[0].overhead_cost
+      })
+    }
+    return productArray
   } catch (err) {
     throw err
   }
