@@ -1,12 +1,12 @@
 import express from 'express'
 import cors from 'cors'
-//import morgan from 'morgan'
+import morgan from 'morgan'
 import nocache from 'nocache'
 import mongoose from 'mongoose'
 
 import routes from './routes'
 
-//require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
+require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 
 class App {
   public express: express.Application
@@ -22,7 +22,7 @@ class App {
   private middlewares() {
     this.express.use(express.json())
     this.express.use(cors())
-    //this.express.use(morgan('dev'))
+    this.express.use(morgan('dev'))
     this.express.use(nocache())
     this.express.use((req, res, next) => {
       if (req.query.apikey === process.env.apikey) {

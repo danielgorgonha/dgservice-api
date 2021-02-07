@@ -21,9 +21,8 @@ class PipedriveController {
     const listAllProducts = await getProducts(org_id)
 
     //Bling request post
-    await insertBling(createXML(getDetails, listAllProducts))
+    const data = await insertBling(createXML(getDetails, listAllProducts))
 
-    //console.log(data)
 
     return res.status(200).json()
   }
@@ -36,15 +35,6 @@ interface IData {
   current: {
     org_id: number
     value: number
-  }
-}
-const insertDB = async (value: number) => {
-  try {
-    await Opportunities.create({
-      valor_total: value
-    })
-  } catch (err) {
-    throw err
   }
 }
 
@@ -76,29 +66,6 @@ interface IPersons {
   }
 }
 
-const getDeals = async (id: number) => {
-  try {
-    const { data: {
-      data: {
-        org_id: { name: company, address },
-        person_id: { name: person, phone, email }
-      } } }: IPersons = await ApiPipeDrive.get(`/deals/${id}`, {
-      params: {
-        api_token: process.env.pipedrive_token
-      }
-    })
-    return {
-      company,
-      address,
-      person,
-      phone: phone.map((phone) => phone.primary ? phone.value : '').toString(),
-      email: email.map((email) => email.primary ? email.value : '').toString()
-    }
-  } catch (err) {
-    throw err
-  }
-}
-
 interface IDealProduct {
   data: {
     data: {
@@ -125,6 +92,58 @@ interface IProduct {
   }
 }
 
+interface ICompany {
+  company: string
+  address: string
+  person: string
+  phone: string
+  email: string
+}
+
+interface IProductArray {
+  productName: string
+  code: string
+  unit: string
+  quantity: number
+  tax: number
+  price: number
+  cost: number
+  overhead_cost: number
+}
+
+const insertDB = async (value: number) => {
+  try {
+    await Opportunities.create({
+      valor_total: value
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
+const getDeals = async (id: number) => {
+  try {
+    const { data: {
+      data: {
+        org_id: { name: company, address },
+        person_id: { name: person, phone, email }
+      } } }: IPersons = await ApiPipeDrive.get(`/deals/${id}`, {
+      params: {
+        api_token: process.env.pipedrive_token
+      }
+    })
+    return {
+      company,
+      address,
+      person,
+      phone: phone.map((phone) => phone.primary ? phone.value : '').toString(),
+      email: email.map((email) => email.primary ? email.value : '').toString()
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
 const getProducts = async (id: number) => {
   try {
     const { data: { data } }: IDealProduct = await ApiPipeDrive.get(`/deals/${id}/products`, {
@@ -148,7 +167,7 @@ const getProducts = async (id: number) => {
         productName,
         code,
         unit,
-        quantify: data[key].quantify,
+        quantity: data[key].quantity,
         tax,
         price: prices[0].price,
         cost: prices[0].cost,
@@ -161,25 +180,6 @@ const getProducts = async (id: number) => {
   }
 }
 
-interface ICompany {
-  company: string
-  address: string
-  person: string
-  phone: string
-  email: string
-}
-
-interface IProductArray {
-  productName: string
-  code: string
-  unit: string
-  quantify: number
-  tax: number
-  price: number
-  cost: number
-  overhead_cost: number
-}
-
 const createXML = (company: ICompany, listProduct: Array<IProductArray>) => {
 
   let items = []
@@ -189,7 +189,7 @@ const createXML = (company: ICompany, listProduct: Array<IProductArray>) => {
         <codigo>${listProduct[key].code}</codigo>
         <descricao>${listProduct[key].productName}</descricao>
         <un>${listProduct[key].unit}</un>
-        <qtde>${listProduct[key].quantify}</qtde>
+        <qtde>${listProduct[key].quantity}</qtde>
         <vlr_unit>${listProduct[key].price}</vlr_unit>
       </item>
     `)
