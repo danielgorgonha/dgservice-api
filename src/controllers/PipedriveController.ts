@@ -29,7 +29,7 @@ class PipedriveController {
     dtArray.filter((thisOne, i) => {
       if (dtArray.indexOf(thisOne) === i) {
         let sumValue = 0
-        getData.filter((data, index, array) => {
+        getData.filter((data) => {
           if (data.date === thisOne) {
             sumValue += data.dealValue
           }
@@ -59,14 +59,14 @@ class PipedriveController {
       const listAllProducts = await getProducts(org_id)
 
       //Bling request post
-      const data = await ApiBling.post('/pedido/', null, {
+      const order = await ApiBling.post('/pedido/', null, {
         params: {
           apikey: process.env.bling_apikey,
           xml: createXML(getDetails, listAllProducts)
         }
       })
 
-      return res.status(200).json()
+      return res.status(200).json(order.data)
     } catch (err) {
       console.log(err)
       return res.status(500).json({
@@ -74,8 +74,6 @@ class PipedriveController {
         message: 'Error - ' + err
       })
     }
-
-
   }
 
 }

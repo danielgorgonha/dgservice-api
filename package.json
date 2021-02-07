@@ -21,7 +21,9 @@
     "express": "^4.17.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.15",
-    "nocache": "^2.1.0"
+    "nocache": "^2.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.13",
@@ -36,7 +38,6 @@
     "@types/morgan": "^1.9.2",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "babel-plugin-module-resolver": "^4.1.0",
-    "dotenv": "^8.2.0",
     "eslint": "^7.19.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^7.2.0",
@@ -45,7 +46,6 @@
     "eslint-plugin-import-helpers": "^1.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "jest": "^26.6.3",
-    "morgan": "^1.10.0",
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.0",
     "ts-node-dev": "^1.1.1",
