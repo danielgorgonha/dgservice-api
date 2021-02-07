@@ -1,3 +1,4 @@
+//require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 import app from './app'
 
 const server = app.listen(process.env.PORT || 8080, () => {
