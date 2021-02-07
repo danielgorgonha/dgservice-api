@@ -1,12 +1,7 @@
 import axios from 'axios'
 
 export const ApiBling = axios.create({
-  baseURL: 'https://bling.com.br/Api/v2',
-  params: {
-    common: {
-      apikey: process.env.bling_apikey
-    }
-  }
+  baseURL: 'https://bling.com.br/Api/v2'
 })
 
 export const ApiPipeDrive = axios.create({

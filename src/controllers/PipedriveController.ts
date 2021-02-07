@@ -21,12 +21,9 @@ class PipedriveController {
     const listAllProducts = await getProducts(org_id)
 
     //Bling request post
-    try {
+    await insertBling(createXML(getDetails, listAllProducts))
 
-    } catch (err) {
-      throw JSON.stringify(err.response)
-    }
-
+    //console.log(data)
 
     return res.status(200).json()
   }
@@ -136,19 +133,22 @@ const getProducts = async (id: number) => {
       }
     })
 
-    const productArray: Array<any> = []
+    const productArray: Array<IProductArray> = []
 
     for (const key in data) {
-      const { data: { data: { name: productName, code, unit, tax, prices } } }: IProduct = await ApiPipeDrive.get(`/products/${data[key].product_id}`, {
+      const { data: {
+        data: {
+          name: productName, code, unit, tax, prices }
+        } }: IProduct = await ApiPipeDrive.get(`/products/${data[key].product_id}`, {
         params: {
           api_token: process.env.pipedrive_token
         }
       })
-
       productArray.push({
         productName,
         code,
         unit,
+        quantify: data[key].quantify,
         tax,
         price: prices[0].price,
         cost: prices[0].cost,
@@ -161,41 +161,65 @@ const getProducts = async (id: number) => {
   }
 }
 
-const createXML = (data: any) => {
+interface ICompany {
+  company: string
+  address: string
+  person: string
+  phone: string
+  email: string
+}
+
+interface IProductArray {
+  productName: string
+  code: string
+  unit: string
+  quantify: number
+  tax: number
+  price: number
+  cost: number
+  overhead_cost: number
+}
+
+const createXML = (company: ICompany, listProduct: Array<IProductArray>) => {
+
+  let items = []
+  for (const key in listProduct) {
+    items.push(`
+      <item>
+        <codigo>${listProduct[key].code}</codigo>
+        <descricao>${listProduct[key].productName}</descricao>
+        <un>${listProduct[key].unit}</un>
+        <qtde>${listProduct[key].quantify}</qtde>
+        <vlr_unit>${listProduct[key].price}</vlr_unit>
+      </item>
+    `)
+  }
+
   return `
     <?xml version="1.0" encoding="UTF-8"?>
     <pedido>
       <cliente>
-        <nome>${data}</nome>
-        <fone>${data}</fone>
-        <email>${data}</email>
+        <nome>${company.company}</nome>
+        <endereco>${company.address}</endereco>
+        <fone>${company.phone}</fone>
+        <email>${company.email}</email>
       </cliente>
       <itens>
-        <item>
-          <codigo>001</codigo>
-          <descricao>Caneta 001</descricao>
-          <un>Pç</un>
-          <qtde>10</qtde>
-          <vlr_unit>1.68</vlr_unit>
-        </item>
+        ${JSON.stringify(items).replace(/(\[")|(\"])/g, "").replace(/\s/g, "")}
       </itens>
-      <parcelas>
-        <parcela>
-          <data>01/09/2009</data>
-          <vlr>100</vlr>
-          <obs>Teste obs 1</obs>
-        </parcela>
-        <parcela>
-          <data>06/09/2009</data>
-          <vlr>50</vlr>
-          <obs></obs>
-        </parcela>
-        <parcela>
-          <data>11/09/2009</data>
-          <vlr>50</vlr>
-          <obs>Teste obs 3</obs>
-        </parcela>
-      </parcelas>
     </pedido>
   `
+}
+
+const insertBling = async (xml: string) => {
+  try {
+    return await ApiBling.post('/pedido/', null, {
+      params: {
+        apikey: process.env.bling_apikey,
+        xml
+      }
+    })
+  } catch (err) {
+    throw JSON.stringify(err.response)
+  }
 }
