@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import morgan from 'morgan'
+//import morgan from 'morgan'
 import nocache from 'nocache'
 import mongoose from 'mongoose'
 
@@ -22,7 +22,7 @@ class App {
   private middlewares() {
     this.express.use(express.json())
     this.express.use(cors())
-    this.express.use(morgan('dev'))
+    //this.express.use(morgan('dev'))
     this.express.use(nocache())
     this.express.use((req, res, next) => {
       if (req.query.apikey === process.env.apikey) {
