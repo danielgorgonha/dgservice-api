@@ -19,8 +19,8 @@ class PipedriveController {
     let synthetic = {
       total_dealvalue: 0
     }
-    let analytic = []
-    let dtArray = []
+    let analytic: Array<any> = []
+    let dtArray: Array<any> = []
     for (const key of getData) {
       dtArray.push(key.date)
       synthetic.total_dealvalue += key.dealValue
@@ -48,20 +48,34 @@ class PipedriveController {
   public async create(req: Request, res: Response): Promise<Response> {
     const { current: { org_id, value } }: IData = req.body
 
-    //Insert database
-    await insertDB(value)
+    try {
+      //Insert database
+      await Opportunities.create({ dealValue: value })
 
-    //Get details of a deal
-    const getDetails = await getDeals(org_id)
+      //Get details of a deal
+      const getDetails = await getDeals(org_id)
 
-    //List products attached to a deal
-    const listAllProducts = await getProducts(org_id)
+      //List products attached to a deal
+      const listAllProducts = await getProducts(org_id)
 
-    //Bling request post
-    const data = await insertBling(createXML(getDetails, listAllProducts))
+      //Bling request post
+      const data = await ApiBling.post('/pedido/', null, {
+        params: {
+          apikey: process.env.bling_apikey,
+          xml: createXML(getDetails, listAllProducts)
+        }
+      })
+
+      return res.status(200).json()
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json({
+        status: 500,
+        message: 'Error - ' + err
+      })
+    }
 
 
-    return res.status(200).json()
   }
 
 }
@@ -148,77 +162,51 @@ interface IProductArray {
   overhead_cost: number
 }
 
-const insertDB = async (value: number) => {
-  try {
-    await Opportunities.create({
-      dealValue: value
-    })
-  } catch (err) {
-    throw err
-  }
-}
-
 const getDeals = async (id: number) => {
   try {
-    const { data: {
-      data: {
-        org_id: { name: company, address },
-        person_id: { name: person, phone, email }
-      } } }: IPersons = await ApiPipeDrive.get(`/deals/${id}`, {
-      params: {
-        api_token: process.env.pipedrive_token
-      }
-    })
+    const { data: { data } }: IPersons = await ApiPipeDrive.get(`/deals/${id}`)
     return {
-      company,
-      address,
-      person,
-      phone: phone.map((phone) => phone.primary ? phone.value : '').toString(),
-      email: email.map((email) => email.primary ? email.value : '').toString()
+      company: data.org_id.name,
+      address: data.org_id.address,
+      person: data.person_id.name,
+      phone: data.person_id.phone.map((phone) => phone.primary ? phone.value : '').toString(),
+      email: data.person_id.email.map((email) => email.primary ? email.value : '').toString()
     }
   } catch (err) {
+    console.log('getDealsError - ' + err)
     throw err
   }
 }
 
 const getProducts = async (id: number) => {
   try {
-    const { data: { data } }: IDealProduct = await ApiPipeDrive.get(`/deals/${id}/products`, {
-      params: {
-        api_token: process.env.pipedrive_token
-      }
-    })
+    const { data: { data } }: IDealProduct = await ApiPipeDrive.get(`/deals/${id}/products`)
 
     const productArray: Array<IProductArray> = []
 
     for (const key in data) {
-      const { data: {
-        data: {
-          name: productName, code, unit, tax, prices }
-        } }: IProduct = await ApiPipeDrive.get(`/products/${data[key].product_id}`, {
-        params: {
-          api_token: process.env.pipedrive_token
-        }
-      })
+      const { data: { data: dataProduct } }: IProduct = await ApiPipeDrive.get(`/products/${data[key].product_id}`)
+
       productArray.push({
-        productName,
-        code,
-        unit,
+        productName: dataProduct.name,
+        code: dataProduct.code,
+        unit: dataProduct.unit,
         quantity: data[key].quantity,
-        tax,
-        price: prices[0].price,
-        cost: prices[0].cost,
-        overhead_cost: prices[0].overhead_cost
+        tax: dataProduct.tax,
+        price: dataProduct.prices[0].price,
+        cost: dataProduct.prices[0].cost,
+        overhead_cost: dataProduct.prices[0].overhead_cost
       })
+
     }
     return productArray
   } catch (err) {
+    console.log('getProductError - ' + err)
     throw err
   }
 }
 
 const createXML = (company: ICompany, listProduct: Array<IProductArray>) => {
-
   let items = []
   for (const key in listProduct) {
     items.push(`
@@ -246,17 +234,4 @@ const createXML = (company: ICompany, listProduct: Array<IProductArray>) => {
       </itens>
     </pedido>
   `
-}
-
-const insertBling = async (xml: string) => {
-  try {
-    return await ApiBling.post('/pedido/', null, {
-      params: {
-        apikey: process.env.bling_apikey,
-        xml
-      }
-    })
-  } catch (err) {
-    throw JSON.stringify(err.response)
-  }
 }

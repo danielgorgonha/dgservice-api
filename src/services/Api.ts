@@ -5,5 +5,8 @@ export const ApiBling = axios.create({
 })
 
 export const ApiPipeDrive = axios.create({
-  baseURL: `https://${process.env.pipedrive_company}.pipedrive.com/api/v1`
+  baseURL: `https://${process.env.pipedrive_company}.pipedrive.com/api/v1`,
+  params: {
+    api_token: process.env.pipedrive_token
+  }
 })
