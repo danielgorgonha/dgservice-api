@@ -64,7 +64,7 @@ Controllers ![OK](/_docs/icon-success.png)<br /> 7 - Criar Middlewares
 - 3 - PipeDrive Gerar API <br />
   ![Pipedrive Gerar Api](/_docs/pipedrive-gerar-api.png)<br />
 - 4 - Bling Gerar API <br />
-  ![Bling Gerar API](/_docs/bling-gerar-api.png)<br />
+  ![Bling Gerar API](https://ajuda.bling.com.br/hc/article_attachments/360051073113/usuarioAPI-caminho.gif)<br />
 
 ### Instalação
 
