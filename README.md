@@ -1,7 +1,7 @@
 # DG Service API RESTful &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]
 
 Api RESTful para captura de ganhos na plataforma CRM Pipedrive e inserção de
-pedidos na plataforma Bling, armazenando estes ganhos em MongoDB para cosolidar
+pedidos na plataforma Bling, armazenando estes ganhos em MongoDB para consolidar
 através de um endpoint.
 
 ## Descrição do Sistema
@@ -54,6 +54,10 @@ Controllers ![OK](/_docs/icon-success.png)<br /> 7 - Criar Middlewares
 - POST ~/pipedrive/won
 - GET ~/pipedrive/findWon
 
+#### Exemplo de consulta no endpoint findWon
+
+![Exemplo endpoint](/docs/dados-consolidado.png)
+
 ### Requisitos
 
 - 1 - Criar conta nas plataformas PipeDrive, Bling e MongoDB Atlas<br />
@@ -61,9 +65,9 @@ Controllers ![OK](/_docs/icon-success.png)<br /> 7 - Criar Middlewares
 - 2.1 - Criar Cluster<br />
 - 2.2 - Criar Usuário <br />
 - 2.3 - Configrar Network <br />
-- 3 - PipeDrive Gerar API <br />
+- 3 - PipeDrive Gerar API <br /><br />
   ![Pipedrive Gerar Api](/_docs/pipedrive-gerar-api.png)<br />
-- 4 - Bling Gerar API <br />
+- 4 - Bling Gerar API <br /><br />
   ![Bling Gerar API](https://ajuda.bling.com.br/hc/article_attachments/360051073113/usuarioAPI-caminho.gif)<br />
 
 ### Instalação
