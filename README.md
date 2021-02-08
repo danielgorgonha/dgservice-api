@@ -56,7 +56,7 @@ Controllers ![OK](/_docs/icon-success.png)<br /> 7 - Criar Middlewares
 
 #### Exemplo de consulta no endpoint findWon
 
-![Exemplo endpoint](/docs/dados-consolidado.png)
+![Exemplo endpoint](/_docs/dados-consolidado.png)
 
 ### Requisitos
 
